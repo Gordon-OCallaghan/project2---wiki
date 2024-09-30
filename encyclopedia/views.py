@@ -17,4 +17,16 @@ def index(request):
     })
 
 
-
+def entry(request, title):
+    #Error checking first 
+    #Does the file exist 
+    entry_content = convert_markdown(title)
+    if entry_content is None:
+        return render(request, "encyclopedia/error.html", {
+            "error_message": "The requested page was not found."
+        })
+    else:
+        return render(request, "encyclopedia/entry.html", {
+            "title": title,
+            "entry": entry_content
+        })
