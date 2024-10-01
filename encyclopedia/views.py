@@ -30,3 +30,22 @@ def entry(request, title):
             "title": title,
             "entry": entry_content
         })
+    
+def search(request):
+    if request.method == "POST":
+        search_query = request.POST['q']
+        content = convert_markdown(search_query)
+        if content is not None:
+            return render (request, "encyclopedia/entry.html", {
+                "title" : search_query,
+                "entry" : content
+            })
+        else: #This is for partial search results 
+            allEntries = util.list_entries()
+            results = [] #List to store partial search results
+            for entry in allEntries:
+                if search_query.lower() in entry.lower():
+                    results.append(entry)
+            return render(request, "encyclopedia/search.html", {
+                "results" : results
+            })
